@@ -3,9 +3,12 @@ var webpackConfig = {
   entry: {
     histogram: "./src/histogram.js",
   },
+  devServer: {
+    contentBase: __dirname,
+  },
   output: {
     filename: "histogram.js",
-    path: path.join(path.resolve(__dirname), '/dist'),
+    path: path.join(path.resolve(__dirname), "/dist"),
     library: "[name]",
     libraryTarget: "umd",
   },
