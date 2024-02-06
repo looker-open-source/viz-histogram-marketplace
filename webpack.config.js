@@ -7,7 +7,7 @@ var webpackConfig = {
     contentBase: __dirname,
   },
   output: {
-    filename: "histogram.js",
+    filename: "bundle.js",
     path: path.join(path.resolve(__dirname), "/dist"),
     library: "[name]",
     libraryTarget: "umd",
