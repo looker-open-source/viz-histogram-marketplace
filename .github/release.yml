@@ -19,4 +19,3 @@ jobs:
     uses: looker-open-source/reusable-actions/.github/workflows/marketplace-viz-release.yml@main
     # Inherits the Looker Automation Bot token to create release PRs and releases
     secrets: inherit
-    
