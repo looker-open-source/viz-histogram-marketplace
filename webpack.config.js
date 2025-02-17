@@ -1,4 +1,6 @@
-var webpackConfig = {
+let path = require("path");
+
+let webpackConfig = {
   mode: "production",
   entry: {
     histogram: "./src/histogram.js",
@@ -16,17 +18,17 @@ var webpackConfig = {
     rules: [
       {
         test: /\.css$/i,
-        loader: ["style-loader", "css-loader"],
+        use: [{loader: "style-loader"}, {loader: "css-loader"}],
       },
       {
         test: /\.(woff|woff2|ttf|otf)$/,
-        loader: "url-loader",
+        use: [{loader: "url-loader"}],
       },
     ],
   },
   resolve: {
     extensions: [".js"],
-    modules: ["node_modules"],
+    modules: [path.join(__dirname, "../src"), "node_modules"],
   },
 };
 
