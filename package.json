@@ -18,7 +18,7 @@
     "watch": "webpack --config webpack.config.js --watch --progress"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.9",
+    "@babel/core": "^7.29.6",
     "@babel/preset-env": "^7.23.9",
     "babel-loader": "^8.2.5",
     "css-loader": "^4.3.0",
