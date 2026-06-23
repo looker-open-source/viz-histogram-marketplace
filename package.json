@@ -14,7 +14,6 @@
   },
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "build:legacy": "env NODE_OPTIONS='--openssl-legacy-provider' webpack",
     "watch": "webpack --config webpack.config.js --watch --progress"
   },
   "devDependencies": {
@@ -27,6 +26,6 @@
     "url-loader": "^4.1.0",
     "vega": "^6.2.0",
     "webpack": "^5.104.1",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^5.1.4"
   }
 }
