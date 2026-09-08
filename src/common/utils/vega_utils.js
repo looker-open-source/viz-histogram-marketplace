@@ -45,18 +45,20 @@ export function positionRefLine(axis, config) {
 
 export function positionLegend(orientation) {
   if (orientation === "right") {
-    let legends = d3.selectAll(".mark-group.role-legend")._groups[0];
+    let legends = d3.selectAll(".mark-group.role-legend").nodes();
+    if (legends.length < 2) return;
     let baseLegend = legends[legends.length - 2];
     let lastLegend = legends[legends.length - 1];
     let translate = parseTransform(d3.select(baseLegend).select("g").attr("transform"));
     let offset = d3.select(baseLegend).select("g").node().getBBox();
     let legendOffset = d3.select(lastLegend).select("g").node().getBBox();
+    let translateY = parseFloat(translate[1]) || 0;
     d3.select(lastLegend)
       .select("g")
       .attr(
         "transform",
         `translate(${translate[0]}, ${
-          eval(translate[1]) + offset.height + legendOffset.height
+          translateY + offset.height + legendOffset.height
         })`
       );
   }
@@ -101,18 +103,19 @@ export function setAxisFormatting(config, chartType, xAxisFormat, yAxisFormat = 
 
 
 export function formatPointLegend(valFormat, coloredPoints, heatmap, hist) {
-  let legends = d3.selectAll(".mark-group.role-legend-entry");
+  let legends = d3.selectAll(".mark-group.role-legend-entry").nodes();
+  if (!legends || !legends.length) return;
   let pointLegend;
   if (!hist && !heatmap) {
-    pointLegend = legends._groups[0][0];
+    pointLegend = legends[0];
   } else if (!hist && heatmap && coloredPoints) {
-      pointLegend = legends._groups[0][0];
+    pointLegend = legends[0];
   } else if (!heatmap && coloredPoints || heatmap && !coloredPoints) {
-    pointLegend = legends._groups[0][1];
+    pointLegend = legends[1] || legends[0];
   } else if (heatmap && coloredPoints) {
-    pointLegend = legends._groups[0][2];
+    pointLegend = legends[2] || legends[0];
   } else {
-    pointLegend = legends._groups[0][0];
+    pointLegend = legends[0];
   }
   d3.select(pointLegend)
     .selectAll("text")

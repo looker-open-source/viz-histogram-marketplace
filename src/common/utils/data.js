@@ -7,10 +7,11 @@ import percentile from "percentile";
 import SSF from "ssf";
 
 export function winsorize(myData, field, p) {
-  if (p === undefined ) { return; }
-  p = p.split("_").map((e) => eval(e));
+  if (p === undefined) { return myData; }
+  let percentiles = p.split("_").map((e) => Number(e));
+  if (percentiles.some(isNaN)) { return myData; }
   let thresholds = percentile(
-    p,
+    percentiles,
     myData.map((e) => e[field])
   );
 
@@ -164,13 +165,15 @@ export function makeBins(myData, field, breakpointsArray, valFormat, axis) {
   let preBin = [];
   let orderedArray = myData.map((e) => e[field]).sort((a, b) => a - b);
   let breakpoints = breakpointsArray.split(",").map((e) => {
-    switch (e.trim()) {
+    let trimmed = e.trim();
+    switch (trimmed) {
       case "min":
         return orderedArray[0];
       case "max":
         return orderedArray[orderedArray.length - 1];
       default:
-        return eval(e);
+        let num = Number(trimmed);
+        return isNaN(num) ? 0 : num;
     }
   });
 
