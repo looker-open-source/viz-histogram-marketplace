@@ -14,13 +14,13 @@ export const baseOptions = {
     display: "select",
     values: [
       {
-        "Max Bins": "bins"
+        "Max Bins": "bins",
       },
       {
-        Steps: "steps"
+        Steps: "steps",
       },
       {
-        Breakpoints: "breakpoints"
+        Breakpoints: "breakpoints",
       },
     ],
     default: "bins",
@@ -399,7 +399,9 @@ export function createOptions(
     default: true,
   };
   var defaultVal =
-    optionsResponse["measures"].length > 2 ? optionsResponse["measures"][2] : "";
+    optionsResponse["measures"].length > 2
+      ? optionsResponse["measures"][2]
+      : "";
   var size_arr = optionsResponse["measures"].concat([{ None: "" }]);
   optionsResponse["options"]["size"] = {
     label: "Size Points By",
@@ -482,7 +484,12 @@ export function createOptions(
     type: "string",
     display: "select",
     order: 6,
-    values: [{ Left: "left" }, { Right: "right" }, { Top: "top" }, { Bottom: "bottom" }],
+    values: [
+      { Left: "left" },
+      { Right: "right" },
+      { Top: "top" },
+      { Bottom: "bottom" },
+    ],
     display_size: "half",
     default: "right",
   };
