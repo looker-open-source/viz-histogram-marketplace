@@ -34,10 +34,21 @@ looker.plugins.visualizations.add({
           min_measures: 2,
           max_measures: undefined,
         })
-      )
+      ) {
+        done();
         return;
+      }
 
-      scatterHist(data, element, config, queryResponse, details, done, this, embed);
+      scatterHist(
+        data,
+        element,
+        config,
+        queryResponse,
+        details,
+        done,
+        this,
+        embed
+      );
     } else {
       if (
         !handleErrors(this, queryResponse, {
@@ -48,11 +59,21 @@ looker.plugins.visualizations.add({
           min_measures: 1,
           max_measures: undefined,
         })
-      )
+      ) {
+        done();
         return;
+      }
 
-      simpleHist(data, element, config, queryResponse, details, done, this, embed);
+      simpleHist(
+        data,
+        element,
+        config,
+        queryResponse,
+        details,
+        done,
+        this,
+        embed
+      );
     }
-    done();
   },
 });

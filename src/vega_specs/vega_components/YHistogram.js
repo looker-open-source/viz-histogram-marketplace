@@ -39,7 +39,8 @@ const YHistogram = ({ dataProperties, config, maxY, height }) => {
           }),
           ...(config.bin_type === "breakpoints" && { binned: true }),
         },
-        field: config["bin_type"] === "breakpoints" ? "bin_start_y" : config["y"],
+        field:
+          config["bin_type"] === "breakpoints" ? "bin_start_y" : config["y"],
         type: "quantitative",
         axis: {
           grid: config["y_grids"],
