@@ -7,9 +7,13 @@ import percentile from "percentile";
 import SSF from "ssf";
 
 export function winsorize(myData, field, p) {
-  if (p === undefined) { return myData; }
+  if (p === undefined) {
+    return myData;
+  }
   let percentiles = p.split("_").map((e) => Number(e));
-  if (percentiles.some(isNaN)) { return myData; }
+  if (percentiles.some(isNaN)) {
+    return myData;
+  }
   let thresholds = percentile(
     percentiles,
     myData.map((e) => e[field])
@@ -53,9 +57,19 @@ export function handleErrors(vis, res, options) {
     return true;
   };
 
-  const { pivots, dimension_like: dimensions, measure_like: measures } = res.fields;
+  const {
+    pivots,
+    dimension_like: dimensions,
+    measure_like: measures,
+  } = res.fields;
   return (
-    check("pivot-req", "Pivot", pivots.length, options.min_pivots, options.max_pivots) &&
+    check(
+      "pivot-req",
+      "Pivot",
+      pivots.length,
+      options.min_pivots,
+      options.max_pivots
+    ) &&
     check(
       "dim-req",
       "Dimension",
@@ -93,7 +107,8 @@ export function prepareData(data, queryResponse) {
         for (var l = 0; l < obj[key]["links"].length; l++) {
           //grab link label and add field name for clarity in menu
           var currentLabel = obj[key]["links"][l]["label"];
-          currentLabel = currentLabel + " (" + key.substring(key.indexOf(".") + 1) + ")";
+          currentLabel =
+            currentLabel + " (" + key.substring(key.indexOf(".") + 1) + ")";
           obj[key]["links"][l]["label"] = currentLabel;
         }
         //add links for field in row
@@ -129,11 +144,14 @@ export function prepareData(data, queryResponse) {
         dataProperties[allFields[field]]["lookerName"] = measure["name"];
         //get label short or label to handle table calcs
         if (typeof measure["label_short"] != "undefined") {
-          dataProperties[allFields[field]]["title"] = measure["label_short"].trim();
+          dataProperties[allFields[field]]["title"] = measure[
+            "label_short"
+          ].trim();
         } else {
           dataProperties[allFields[field]]["title"] = measure["label"].trim();
         }
-        dataProperties[allFields[field]]["valueFormat"] = measure["value_format"];
+        dataProperties[allFields[field]]["valueFormat"] =
+          measure["value_format"];
         if (measure["type"] == "yesno") {
           dataProperties[allFields[field]]["dtype"] = "nominal";
         } else {
@@ -151,7 +169,8 @@ export function prepareData(data, queryResponse) {
         } else {
           dataProperties[allFields[field]]["title"] = dimension["label"];
         }
-        dataProperties[allFields[field]]["valueFormat"] = dimension["value_format"];
+        dataProperties[allFields[field]]["valueFormat"] =
+          dimension["value_format"];
         dataProperties[allFields[field]]["dtype"] = "nominal";
       }
     });
@@ -161,7 +180,9 @@ export function prepareData(data, queryResponse) {
 }
 
 export function makeBins(myData, field, breakpointsArray, valFormat, axis) {
-  if (!(myData && field && breakpointsArray && valFormat && axis)) { return; }
+  if (!(myData && field && breakpointsArray && valFormat && axis)) {
+    return;
+  }
   let preBin = [];
   let orderedArray = myData.map((e) => e[field]).sort((a, b) => a - b);
   let breakpoints = breakpointsArray.split(",").map((e) => {
@@ -202,6 +223,6 @@ export function makeBins(myData, field, breakpointsArray, valFormat, axis) {
 export function getPercentile(p, field, myData) {
   return percentile(
     p,
-    myData.map((e) => e[field]).filter(e => e !== null)
+    myData.map((e) => e[field]).filter((e) => e !== null)
   );
 }

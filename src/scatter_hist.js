@@ -5,8 +5,15 @@
 
 import getChart from "./vega_specs/index";
 import { prepareData, winsorize } from "./common/utils/data";
-import { fixChartSizing, positionLegend, runFormatting } from "./common/utils/vega_utils";
-import { tooltipFormatter, getScatterTooltipFields } from "./common/utils/tooltip";
+import {
+  fixChartSizing,
+  positionLegend,
+  runFormatting,
+} from "./common/utils/vega_utils";
+import {
+  tooltipFormatter,
+  getScatterTooltipFields,
+} from "./common/utils/tooltip";
 import { baseOptions, createOptions } from "./common/options";
 
 export function scatterHist(
@@ -61,22 +68,27 @@ export function scatterHist(
   const valFormatOverrideX = config["x_axis_value_format"];
   const valFormatOverrideY = config["y_axis_value_format"];
 
-  let valFormatX = valFormatOverrideX !== "" ? valFormatOverrideX : defaultValFormatX;
+  let valFormatX =
+    valFormatOverrideX !== "" ? valFormatOverrideX : defaultValFormatX;
   if (valFormatX === null || valFormatX === undefined) {
     valFormatX = "#,##0";
   }
 
-  let valFormatY = valFormatOverrideY !== "" ? valFormatOverrideY : defaultValFormatY;
+  let valFormatY =
+    valFormatOverrideY !== "" ? valFormatOverrideY : defaultValFormatY;
   if (valFormatY === null || valFormatY === undefined) {
     valFormatY = "#,##0";
   }
 
   let valFormatPoints;
   if (config["size"]) {
-    const defaultValFormatPoints = dataProperties[config["size"]]["valueFormat"];
+    const defaultValFormatPoints =
+      dataProperties[config["size"]]["valueFormat"];
     const valFormatOverridePoints = config["points_legend_value_format"];
     valFormatPoints =
-      valFormatOverridePoints !== "" ? valFormatOverridePoints : defaultValFormatPoints;
+      valFormatOverridePoints !== ""
+        ? valFormatOverridePoints
+        : defaultValFormatPoints;
     if (valFormatPoints === null || valFormatPoints === undefined) {
       valFormatPoints = "#,##0";
     }
@@ -87,7 +99,11 @@ export function scatterHist(
     myData = winsorize(myData, config["y"], config["percentile"]);
   }
 
-  const tooltipFields = getScatterTooltipFields(dataProperties, queryResponse, config);
+  const tooltipFields = getScatterTooltipFields(
+    dataProperties,
+    queryResponse,
+    config
+  );
   var vegaChart = {
     $schema: "https://vega.github.io/schema/vega-lite/v4.json",
     data: {
@@ -133,10 +149,10 @@ export function scatterHist(
       formatChart();
 
       if (!details.print) {
-        view.addEventListener("wheel", formatChart, {passive: true});
-        view.addEventListener("mousedown", formatChart, {passive: true});
-        view.addEventListener("mouseup", formatChart, {passive: true});
-        view.addEventListener("drag", formatChart, {passive: true});
+        view.addEventListener("wheel", formatChart, { passive: true });
+        view.addEventListener("mousedown", formatChart, { passive: true });
+        view.addEventListener("mouseup", formatChart, { passive: true });
+        view.addEventListener("drag", formatChart, { passive: true });
 
         view.addEventListener("mousemove", (event, item) => {
           tooltipFormatter(
@@ -159,7 +175,12 @@ export function scatterHist(
 
         // DRILL SUPPORT
         view.addEventListener("click", function (event, item) {
-          if (item === undefined || item.datum === undefined || Object.keys(item.datum).length <= 1 || item.fillOpacity === 0) {
+          if (
+            item === undefined ||
+            item.datum === undefined ||
+            Object.keys(item.datum).length <= 1 ||
+            item.fillOpacity === 0
+          ) {
             return;
           }
           // only support crossfiltering for scatter points for now
@@ -242,7 +263,10 @@ export function scatterHist(
     })
     .catch((error) => {
       console.error("Error rendering scatter histogram:", error);
-      that.addError({ title: "Rendering Error", message: error.message || String(error) });
+      that.addError({
+        title: "Rendering Error",
+        message: error.message || String(error),
+      });
       done();
     });
 }

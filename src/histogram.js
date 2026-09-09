@@ -39,7 +39,16 @@ looker.plugins.visualizations.add({
         return;
       }
 
-      scatterHist(data, element, config, queryResponse, details, done, this, embed);
+      scatterHist(
+        data,
+        element,
+        config,
+        queryResponse,
+        details,
+        done,
+        this,
+        embed
+      );
     } else {
       if (
         !handleErrors(this, queryResponse, {
@@ -55,7 +64,16 @@ looker.plugins.visualizations.add({
         return;
       }
 
-      simpleHist(data, element, config, queryResponse, details, done, this, embed);
+      simpleHist(
+        data,
+        element,
+        config,
+        queryResponse,
+        details,
+        done,
+        this,
+        embed
+      );
     }
   },
 });

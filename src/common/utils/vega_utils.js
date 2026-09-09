@@ -17,18 +17,15 @@ export const FONT_TYPE =
 
 function parseTransform(str) {
   return str.split("(")[1].split(")")[0].split(",");
-} 
+}
 
 export function positionRefLine(axis, config) {
-  let selector = (!config["x_hist"] && !config["y_hist"]) ? ".mark-group.role-frame.root" : ".BOUNDING_BOX_group"
-  let boundingbox = d3
-    .select(selector)
-    .select("path")
-    .node()
-    .getBBox();
-  let line = d3
-    .select(`.refLine${axis}_marks`)
-    .selectChildren();
+  let selector =
+    !config["x_hist"] && !config["y_hist"]
+      ? ".mark-group.role-frame.root"
+      : ".BOUNDING_BOX_group";
+  let boundingbox = d3.select(selector).select("path").node().getBBox();
+  let line = d3.select(`.refLine${axis}_marks`).selectChildren();
   let translate = parseTransform(line.attr("transform"));
   if (axis === "x") {
     translate[1] = boundingbox.height;
@@ -49,7 +46,9 @@ export function positionLegend(orientation) {
     if (legends.length < 2) return;
     let baseLegend = legends[legends.length - 2];
     let lastLegend = legends[legends.length - 1];
-    let translate = parseTransform(d3.select(baseLegend).select("g").attr("transform"));
+    let translate = parseTransform(
+      d3.select(baseLegend).select("g").attr("transform")
+    );
     let offset = d3.select(baseLegend).select("g").node().getBBox();
     let legendOffset = d3.select(lastLegend).select("g").node().getBBox();
     let translateY = parseFloat(translate[1]) || 0;
@@ -76,7 +75,12 @@ export function fixChartSizing() {
     .style("left", 0);
 }
 
-export function setAxisFormatting(config, chartType, xAxisFormat, yAxisFormat = null) {
+export function setAxisFormatting(
+  config,
+  chartType,
+  xAxisFormat,
+  yAxisFormat = null
+) {
   if (chartType === "simple") {
     d3.select("g.mark-text.role-axis-label")
       .selectAll("text")
@@ -84,23 +88,30 @@ export function setAxisFormatting(config, chartType, xAxisFormat, yAxisFormat = 
         d3.select(this).text(SSF.format(xAxisFormat, d.datum.value));
       });
   } else {
-    let selector = (config["x_hist"] || config["y_hist"]) ? ".BOUNDING_BOX_group" : ".mark-group.role-frame.root" 
-    d3.selectAll(selector).selectAll(".mark-text.role-axis-label")
-      .each(function(d, i) {
+    let selector =
+      config["x_hist"] || config["y_hist"]
+        ? ".BOUNDING_BOX_group"
+        : ".mark-group.role-frame.root";
+    d3.selectAll(selector)
+      .selectAll(".mark-text.role-axis-label")
+      .each(function (d, i) {
         if (i == 0) {
-          d3.select(this).selectAll("text").each(function (d, i) {
+          d3.select(this)
+            .selectAll("text")
+            .each(function (d, i) {
               d3.select(this).text(SSF.format(xAxisFormat, d.datum.value));
-          })
+            });
         }
         if (i == 1) {
-          d3.select(this).selectAll("text").each(function (d, i) {
-            d3.select(this).text(SSF.format(yAxisFormat, d.datum.value));
-          });
+          d3.select(this)
+            .selectAll("text")
+            .each(function (d, i) {
+              d3.select(this).text(SSF.format(yAxisFormat, d.datum.value));
+            });
         }
-      })
-    }
+      });
   }
-
+}
 
 export function formatPointLegend(valFormat, coloredPoints, heatmap, hist) {
   let legends = d3.selectAll(".mark-group.role-legend-entry").nodes();
@@ -110,7 +121,7 @@ export function formatPointLegend(valFormat, coloredPoints, heatmap, hist) {
     pointLegend = legends[0];
   } else if (!hist && heatmap && coloredPoints) {
     pointLegend = legends[0];
-  } else if (!heatmap && coloredPoints || heatmap && !coloredPoints) {
+  } else if ((!heatmap && coloredPoints) || (heatmap && !coloredPoints)) {
     pointLegend = legends[1] || legends[0];
   } else if (heatmap && coloredPoints) {
     pointLegend = legends[2] || legends[0];
@@ -152,7 +163,11 @@ export function runFormatting(
     details.crossfilters.length &&
     config["layer_points"]
   ) {
-    formatCrossfilterSelection(details.crossfilters, mainDimensions, config["color_col"]);
+    formatCrossfilterSelection(
+      details.crossfilters,
+      mainDimensions,
+      config["color_col"]
+    );
   }
   setAxisFormatting(config, "scatter", valFormatX, valFormatY);
   if (config["size"] && config["layer_points"]) {
@@ -160,7 +175,7 @@ export function runFormatting(
       valFormatPoints,
       mainDimensions[1] !== undefined,
       config["heatmap_off"],
-      (config["x_hist"] || config["y_hist"])
+      config["x_hist"] || config["y_hist"]
     );
   }
   if (config["reference_line_x"]) {
