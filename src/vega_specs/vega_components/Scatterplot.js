@@ -20,7 +20,11 @@ export function useScatterplot({
     width,
     height,
   });
-  if (config["layer_points"] && config["size"] !== "" && config["size"] !== undefined) {
+  if (
+    config["layer_points"] &&
+    config["size"] !== "" &&
+    config["size"] !== undefined
+  ) {
     useSize(scatterplot, config, dataProperties);
   }
   if (config["layer_points"] && mainDimensions[1] !== undefined) {

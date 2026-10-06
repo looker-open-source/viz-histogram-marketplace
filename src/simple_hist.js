@@ -4,9 +4,16 @@
 // modified by the "General Software Terms" of the Google Cloud Service Specific Terms, available at: https://cloud.google.com/terms/service-terms.
 
 import { baseOptions } from "./common/options";
-import { fixChartSizing, setAxisFormatting, FONT_TYPE } from "./common/utils/vega_utils";
+import {
+  fixChartSizing,
+  setAxisFormatting,
+  FONT_TYPE,
+} from "./common/utils/vega_utils";
 import { winsorize, prepareData, makeBins } from "./common/utils/data";
-import { simpleHistTooltipHandler, simpleTooltipFormatter } from "./common/utils/tooltip";
+import {
+  simpleHistTooltipHandler,
+  simpleTooltipFormatter,
+} from "./common/utils/tooltip";
 
 export function simpleHist(
   data,
@@ -20,15 +27,21 @@ export function simpleHist(
 ) {
   that.clearErrors();
   let { dataProperties, myData } = prepareData(data, queryResponse);
-  const vegaSafeNameMes = queryResponse.fields.measure_like[0].name.replace(".", "_");
-  const vegaSafeNameDim = queryResponse.fields.dimensions[0].name.replace(".", "_");
+  const vegaSafeNameMes = queryResponse.fields.measure_like[0].name.replace(
+    ".",
+    "_"
+  );
+  const vegaSafeNameDim = queryResponse.fields.dimensions[0].name.replace(
+    ".",
+    "_"
+  );
   const max = Math.max(...myData.map((e) => e[vegaSafeNameMes]));
 
   //Need to reassign some options when toggling from scatter to simple hist
   const options = Object.assign({}, baseOptions);
   if (options["bin_type"]["values"].length < 3) {
-    let len = options["bin_type"]["values"].length
-    options["bin_type"]["values"][len] = { Breakpoints: "breakpoints" }
+    let len = options["bin_type"]["values"].length;
+    options["bin_type"]["values"][len] = { Breakpoints: "breakpoints" };
   }
   if (config["bin_type"] === "bins") {
     options["max_bins"] = {
@@ -53,9 +66,9 @@ export function simpleHist(
       section: "  Values",
       order: 4,
       type: "string",
-      default: `min, ${Math.floor(max / 5)}, ${Math.floor(max / 4)}, ${Math.floor(
-        max / 3
-      )}, ${Math.floor(max / 2)}, max`,
+      default: `min, ${Math.floor(max / 5)}, ${Math.floor(
+        max / 4
+      )}, ${Math.floor(max / 3)}, ${Math.floor(max / 2)}, max`,
     };
     options["breakpoint_ordinal"] = {
       label: "Use Equal Sized Columns (Ordinal Bins)",
@@ -87,7 +100,8 @@ export function simpleHist(
   const defaultValFormat = dataProperties[vegaSafeNameMes]["valueFormat"];
   const valFormatOverride = config["x_axis_value_format"];
 
-  let valFormat = valFormatOverride !== "" ? valFormatOverride : defaultValFormat;
+  let valFormat =
+    valFormatOverride !== "" ? valFormatOverride : defaultValFormat;
   if (valFormat === null || valFormat === undefined) {
     valFormat = "#,##0";
   }
@@ -214,73 +228,91 @@ export function simpleHist(
     actions: false,
     renderer: "svg",
     tooltip: { theme: "custom" },
-  }).then(({ spec, view }) => {
-    fixChartSizing();
-    setAxisFormatting(config, "simple", valFormat);
-    if (details.print) {
-      done();
-      return;
-    }
+  })
+    .then(({ spec, view }) => {
+      fixChartSizing();
+      setAxisFormatting(config, "simple", valFormat);
 
-    view.addEventListener("mousemove", (event, item) => {
-      simpleTooltipFormatter(dataProperties, config, vegaSafeNameMes, item, valFormat);
-    });
+      if (!details.print) {
+        view.addEventListener("mousemove", (event, item) => {
+          simpleTooltipFormatter(
+            dataProperties,
+            config,
+            vegaSafeNameMes,
+            item,
+            valFormat
+          );
+        });
 
-    //DRILL SUPPORT
-    view.addEventListener("click", function (event, item) {
-      if (item.datum === undefined) {
-        return;
-      }
-      const aggField = dataProperties[vegaSafeNameMes]["lookerName"];
-      const bounds =
-        config["bin_type"] === "breakpoints"
-          ? ["bin_start_x", "bin_end_x"]
-          : Object.keys(item.datum).filter((ele) => ele.includes(vegaSafeNameMes));
-
-      let links = item.datum.links;
-      let baseURL = myData[0].links;
-      let fields = [];
-      for (let field of queryResponse.fields.dimension_like.concat(
-        queryResponse.fields.measure_like
-      )) {
-        fields.push(field.name);
-      }
-      // Base URL points to all fields in queryResponse
-      if (baseURL.length < 1) {
-        links = [];
-      } else {
-        baseURL = baseURL
-          .filter((ele) => ele.url.includes("/explore/"))[0]
-          .url.split("?")[0];
-        let url = `${baseURL}?fields=${fields.join(",")}`;
-
-        // Apply appropriate filtering based on bounds
-        url += `&f[${aggField}]=[${item.datum[bounds[0]]}, ${item.datum[bounds[1]]})`;
-
-        //Inherit query filters
-        if (queryResponse.applied_filters !== undefined) {
-          let filters = queryResponse.applied_filters;
-          for (let filter in filters) {
-            url += `&f[${filters[filter].field.name}]=${filters[filter].value}`;
+        //DRILL SUPPORT
+        view.addEventListener("click", function (event, item) {
+          if (item.datum === undefined) {
+            return;
           }
-        }
-        links = [
-          {
-            label: `Show ${
-              config["bin_type"] === "breakpoints"
-                ? item.datum.count_x
-                : item.datum.__count
-            } Records`,
-            type: "drill",
-            type_label: "Drill into Records",
-            url: url,
-          },
-        ];
+          const aggField = dataProperties[vegaSafeNameMes]["lookerName"];
+          const bounds =
+            config["bin_type"] === "breakpoints"
+              ? ["bin_start_x", "bin_end_x"]
+              : Object.keys(item.datum).filter((ele) =>
+                  ele.includes(vegaSafeNameMes)
+                );
+
+          let links = item.datum.links;
+          let baseURL = myData[0].links;
+          let fields = [];
+          for (let field of queryResponse.fields.dimension_like.concat(
+            queryResponse.fields.measure_like
+          )) {
+            fields.push(field.name);
+          }
+          // Base URL points to all fields in queryResponse
+          if (baseURL.length < 1) {
+            links = [];
+          } else {
+            baseURL = baseURL
+              .filter((ele) => ele.url.includes("/explore/"))[0]
+              .url.split("?")[0];
+            let url = `${baseURL}?fields=${fields.join(",")}`;
+
+            // Apply appropriate filtering based on bounds
+            url += `&f[${aggField}]=[${item.datum[bounds[0]]}, ${
+              item.datum[bounds[1]]
+            })`;
+
+            //Inherit query filters
+            if (queryResponse.applied_filters !== undefined) {
+              let filters = queryResponse.applied_filters;
+              for (let filter in filters) {
+                url += `&f[${filters[filter].field.name}]=${filters[filter].value}`;
+              }
+            }
+            links = [
+              {
+                label: `Show ${
+                  config["bin_type"] === "breakpoints"
+                    ? item.datum.count_x
+                    : item.datum.__count
+                } Records`,
+                type: "drill",
+                type_label: "Drill into Records",
+                url: url,
+              },
+            ];
+          }
+          LookerCharts.Utils.openDrillMenu({
+            links: links,
+            event: event,
+          });
+        });
       }
-      LookerCharts.Utils.openDrillMenu({
-        links: links,
-        event: event,
+      done();
+    })
+    .catch((error) => {
+      console.error("Error rendering simple histogram:", error);
+      that.addError({
+        title: "Rendering Error",
+        message: error.message || String(error),
       });
+      done();
     });
-  });
 }

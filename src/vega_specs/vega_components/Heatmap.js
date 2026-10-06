@@ -56,7 +56,8 @@ function Heatmap({
             }),
           },
         }),
-        field: config["bin_type"] === "breakpoints" ? "bin_start_x" : config["x"],
+        field:
+          config["bin_type"] === "breakpoints" ? "bin_start_x" : config["x"],
         type: "quantitative",
         axis: {
           name: "xAxis",
@@ -99,7 +100,8 @@ function Heatmap({
             }),
           },
         }),
-        field: config["bin_type"] === "breakpoints" ? "bin_start_y" : config["y"],
+        field:
+          config["bin_type"] === "breakpoints" ? "bin_start_y" : config["y"],
         type: "quantitative",
         axis: {
           title:
@@ -165,27 +167,31 @@ function Heatmap({
               }),
             }
           ).concat(
-            binnedTooltipHandler(dataProperties[config["y"]], config["y_axis_override"], {
-              ...(config.bin_type === "bins" && {
-                maxbins: config["max_bins"],
-              }),
-              ...(config.bin_type === "steps" && {
-                step:
-                  config["num_step_y"] <= Math.floor(maxY / 200)
-                    ? Math.floor(maxY / 200)
-                    : config["num_step_y"],
-              }),
-              ...(config.bin_type === "breakpoints" && {
-                binned: true,
-              }),
-            })
+            binnedTooltipHandler(
+              dataProperties[config["y"]],
+              config["y_axis_override"],
+              {
+                ...(config.bin_type === "bins" && {
+                  maxbins: config["max_bins"],
+                }),
+                ...(config.bin_type === "steps" && {
+                  step:
+                    config["num_step_y"] <= Math.floor(maxY / 200)
+                      ? Math.floor(maxY / 200)
+                      : config["num_step_y"],
+                }),
+                ...(config.bin_type === "breakpoints" && {
+                  binned: true,
+                }),
+              }
+            )
           );
           arr = arr.concat(arr.splice(1, 1));
           return arr;
         })(),
       }),
     },
-  }
+  };
 }
 
 export default Heatmap;

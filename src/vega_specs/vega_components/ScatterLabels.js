@@ -25,7 +25,9 @@ function ScatterLabels({ config, dataProperties, mainDimensions }) {
         type: "quantitative",
       },
       text: {
-        field: dataProperties[FILTERED_LABELS] ? FILTERED_LABELS : mainDimensions[0],
+        field: dataProperties[FILTERED_LABELS]
+          ? FILTERED_LABELS
+          : mainDimensions[0],
       },
     },
   };

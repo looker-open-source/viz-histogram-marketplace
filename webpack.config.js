@@ -11,7 +11,7 @@ let webpackConfig = {
     },
   },
   output: {
-    hashFunction: 'sha256',
+    hashFunction: "sha256",
     filename: "bundle.js",
     path: path.join(path.resolve(__dirname), "/dist"),
     library: "[name]",
@@ -21,11 +21,11 @@ let webpackConfig = {
     rules: [
       {
         test: /\.css$/i,
-        use: [{loader: "style-loader"}, {loader: "css-loader"}],
+        use: [{ loader: "style-loader" }, { loader: "css-loader" }],
       },
       {
         test: /\.(woff|woff2|ttf|otf)$/,
-        use: [{loader: "url-loader"}],
+        use: [{ loader: "url-loader" }],
       },
     ],
   },

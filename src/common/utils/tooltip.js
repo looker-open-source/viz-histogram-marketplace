@@ -42,7 +42,13 @@ export function binnedTooltipHandler(datum, labelOverride, bins) {
   ];
 }
 
-export function simpleTooltipFormatter(dataProperties, config, measure, item, valFormat) {
+export function simpleTooltipFormatter(
+  dataProperties,
+  config,
+  measure,
+  item,
+  valFormat
+) {
   if (
     config === undefined ||
     item === undefined ||
@@ -56,7 +62,10 @@ export function simpleTooltipFormatter(dataProperties, config, measure, item, va
     return text.replace(/\u2013|\u2014|\u2212/g, "-");
   };
   const getText = (item) => {
-    let title = config[`x_axis_override`] !== "" ? config[`x_axis_override`] : dataProperties[measure].title;
+    let title =
+      config[`x_axis_override`] !== ""
+        ? config[`x_axis_override`]
+        : dataProperties[measure].title;
     return item.tooltip[title].split(" ");
   };
   const format = (text) => {
@@ -97,12 +106,18 @@ export function tooltipFormatter(
   };
 
   const getText = (axis) => {
-    let title = config[`${axis}_axis_override`] !== "" ? config[`${axis}_axis_override`] : dataProperties[config[axis].replace(".", "_")].title;
+    let title =
+      config[`${axis}_axis_override`] !== ""
+        ? config[`${axis}_axis_override`]
+        : dataProperties[config[axis].replace(".", "_")].title;
     return item.tooltip[title].split(" ");
   };
 
   const getTextScatter = (axis) => {
-    let title = (axis !== "size" && config[`${axis}_axis_override`] !== "") ? config[`${axis}_axis_override`] : dataProperties[config[axis].replace(".", "_")].title;
+    let title =
+      axis !== "size" && config[`${axis}_axis_override`] !== ""
+        ? config[`${axis}_axis_override`]
+        : dataProperties[config[axis].replace(".", "_")].title;
     return Number(checkNeg(item.tooltip[title]));
   };
 
@@ -141,18 +156,26 @@ export function tooltipFormatter(
     d3.selectAll("td.value").each(function (_d, i) {
       if (i === 0) {
         d3.select(this).text(SSF.format(valFormatX, getTextScatter("x")));
-      }
-      else if (i === 1) {
+      } else if (i === 1) {
         if (config["x"] !== config["y"]) {
           // Weird edge case where the user selects the same field for both X and Y
           d3.select(this).text(SSF.format(valFormatY, getTextScatter("y")));
         } else if (config["size"]) {
-          d3.select(this).text(SSF.format(valFormatPoints, getTextScatter("size")));
+          d3.select(this).text(
+            SSF.format(valFormatPoints, getTextScatter("size"))
+          );
           scatterFlag = 1;
         }
-      } 
-      else if (i === 2 && !scatterFlag && config["size"] && (config["x"] !== config["size"] && config["y"] !== config["size"])) {
-        d3.select(this).text(SSF.format(valFormatPoints, getTextScatter("size")));
+      } else if (
+        i === 2 &&
+        !scatterFlag &&
+        config["size"] &&
+        config["x"] !== config["size"] &&
+        config["y"] !== config["size"]
+      ) {
+        d3.select(this).text(
+          SSF.format(valFormatPoints, getTextScatter("size"))
+        );
       }
     });
   }
@@ -197,7 +220,9 @@ export function getScatterTooltipFields(dataProperties, queryResponse, config) {
   if (config["size"]) {
     order.push(config["size"]);
   }
-  tooltipFields.sort((a, b) => order.indexOf(a["field"]) - order.indexOf(b["field"]));
+  tooltipFields.sort(
+    (a, b) => order.indexOf(a["field"]) - order.indexOf(b["field"])
+  );
 
   // Move dimensions to back of array
   for (let i = 0; i < queryResponse.fields.dimensions.length; i++) {
